@@ -123,7 +123,7 @@ function Download {
     }
 }
 
-function Download-Explorer {
+function DownloadExplorer {
     param (
         [string]$Version
     )

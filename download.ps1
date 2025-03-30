@@ -1,38 +1,51 @@
 param(
-    [Parameter(Position = 0, Mandatory = $true)]
-    [ValidateSet("multi", "explorer")]
-    [string]$Command,
+    [Parameter(Mandatory = $false)]
+    [ValidateSet("multi", "explorer", "help", "")]
+    [string]$command = "help",
+    
+    [Parameter(Mandatory = $false)]
+    [Alias("v")]
+    [string]$version,
+
+    [Parameter(Mandatory = $false)]
+    [Alias("o")]
+    [string]$output,
+
+    [Parameter(Mandatory = $false)]
+    [Alias("n")]
+    [string]$name,
 
     [Parameter(Mandatory = $false)]
     [Alias("h")]
-    [switch]$Help
+    [switch]$help
 )
 
-# show specified command help
+. "$PSScriptRoot\utils.ps1"
 
-if ($Help) {
-    switch ($Command) {
-        "multi" {
-            & .\download_multi.ps1 -Help
-        }
-        "explorer" {
-            & .\download_explorer.ps1 -Help
-        }
-    }
-    return
+# 
+# help menu
+# 
+
+if ($help.IsPresent -or $command -eq "help" -or $command -eq "") {
+    return 'download help'
 }
 
-# pass args to specified command
+# 
+# functions
+# 
 
-switch ($Command) {
+# 
+# command switch
+# 
+
+switch ($command) {
     "multi" {
-        & .\download_multi.ps1 @args
+        return Get-Multi
     }
     "explorer" {
-        & .\download_explorer.ps1 @args
+        return Get-Explorer
     }
     default {
-        Write-Host "Unknown command: $Command" -ForegroundColor Red
-        Write-Host "Use -Help for usage information" -ForegroundColor Yellow
+        throw "Unknown command: '$command'"
     }
 }
